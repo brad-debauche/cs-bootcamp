@@ -1,13 +1,5 @@
 ## Automated ELK Stack Deployment
 
-The files in this repository were used to configure the network depicted below.
-
-![Project Network Diagram](Images/ELK_stack_network_diagram.png)
-
-These files have been tested and used to generate a live ELK deployment on Azure. They can be used to recreate the entire deployment pictured above. Alternatively, select portions of the playbook file may be used to install only certain pieces of it, such as Filebeat.
-
-  - _TODO: Enter the playbook file._
-
 This document contains the following details:
 - Description of the Topology
 - Access Policies
@@ -19,47 +11,53 @@ This document contains the following details:
 
 ### Description of the Topology
 
+The files in this repository were used to configure the network depicted below.
+
+![Project Network Diagram](Images/ELK_stack_network_diagram.png)
+
 The main purpose of this network is to expose a load-balanced and monitored instance of DVWA, the Damn Vulnerable Web Application.
 
-Load balancing ensures that the application will be highly available, in addition to restricting access to the web servers.
+Load balancing ensures that the application will be highly available, in addition to restricting public access to the web servers.
 
-Integrating an ELK server allows users to easily monitor the vulnerable VMs for changes to the files and system resources.
+Integrating an ELK server allows users to easily monitor the vulnerable VMs for changes to the system files and system metrics.
 
 The configuration details of each machine may be found below.
 
 | Name     | Function | IP Address | Operating System |
-|----------|----------|------------|------------------|
+|:----------|:----------|:------------|:------------------|
 | Jump Box  | Gateway         | 10.0.0.4   | Linux            |
-| Web-1     | DVWA server (1) | 10.0.0.5   | Linux            |
-| Web-2     | DVWA server (2) | 10.0.0.6   | Linux            |
-| Web-3     | DVWA server (3) | 10.0.0.7   | Linux            |
-| ELK Server | ELK server     | 10.1.0.4   | Linux            |
+| Web-1     | DVWA web server | 10.0.0.5   | Linux            |
+| Web-2     | DVWA web server | 10.0.0.6   | Linux            |
+| Web-3     | DVWA web server | 10.0.0.7   | Linux            |
+| ELK Server | Monitoring server | 10.1.0.4 | Linux           |
 
 ### Access Policies
 
 The machines on the internal network are not exposed to the public Internet. 
 
-Only the jump box and ELK machine can accept connections from the Internet. Access to these machines is only allowed from the following IP addresses:
+Only the jump box and ELK server can accept connections from the Internet. Access to these machines is only allowed from the following IP addresses:
 - 52.177.85.216 
 
-Machines within the network can only be accessed by the jump box server.
-- 10.0.0.4 
+Machines within the network can only be accessed by internal hosts.
+- 10.0.0.0/24 or 10.1.0.0/24
 
 A summary of the access policies in place can be found in the table below.
 
 | Name     | Publicly Accessible | Allowed IP Addresses |
-|----------|---------------------|----------------------|
-| Jump Box | Yes                 | 52.177.85.216 to port 22   |
-| Web-1    | No                  | 10.0.0.4 to port 22        |
-| Web-2    | No                  | 10.0.0.4 to port 22        |
-| Web-3    | No                  | 10.0.0.4 to port 22        |
-| Load Balancer | Yes            | 52.177.85.216 to port 80   |
-| ELK      | Yes                 | 52.177.85.216 to port 5601 |  
-| ELK      | No                  | 10.0.0.4 to port 22        |
+|:---------|:--------------------|:---------------------|
+| Jump Box | Yes                 | 52.177.85.216        |
+| DVWA servers  | No             | 10.0.0.1-255         |
+| Load Balancer | Yes            | 52.177.85.216        |
+| ELK      | No                  | 10.0.0.4             |
+| ELK (Web UI)  | Yes            | 52.177.85.216        |  
 
 
 ### Elk Configuration
 
+These files have been tested and used to generate a live ELK deployment on Azure. They can be used to recreate the entire deployment pictured above. Alternatively, select portions of the playbook file may be used to install only certain pieces of it, such as Filebeat.
+
+  - _TODO: Enter the playbook file._
+  
 Ansible was used to automate configuration of the ELK machine. No configuration was performed manually, which is advantageous because...
 - The process is consistent and repeatable
 
@@ -97,3 +95,4 @@ _TODO: Answer the following questions to fill in the blanks:_
 - _Which URL do you navigate to in order to check that the ELK server is running?
 
 _As a **Bonus**, provide the specific commands the user will need to run to download the playbook, update the files, etc._
+
