@@ -54,10 +54,6 @@ A summary of the access policies in place can be found in the table below.
 
 ### Elk Configuration
 
-These files have been tested and used to generate a live ELK deployment on Azure. They can be used to recreate the entire deployment pictured above. Alternatively, select portions of the playbook file may be used to install only certain pieces of it, such as Filebeat.
-
-  - _TODO: Enter the playbook file._
-  
 Ansible was used to automate configuration of the ELK machine. No configuration was performed manually, which is advantageous because...
 - The process is consistent and repeatable
 
@@ -66,10 +62,67 @@ The playbook implements the following tasks:
 - Modify the OS configuration to suit the installation
 - Download the container
 - Make the installation persistent through restarts
-
+  
 The following screenshot displays the result of running `docker ps` after successfully configuring the ELK instance.
 
-![TODO: Update the path with the name of your screenshot of docker ps output](Images/docker_ps_output.png)
+![ELK "docker ps" output](Images/ELK_docker_ps.png)
+
+These files have been tested and used to generate a live ELK deployment on Azure. They can be used to recreate the entire deployment pictured above. Alternatively, select portions of the playbook file may be used to install only certain pieces of it, such as Filebeat.
+
+```yaml
+---
+  - name: Install docker and elk
+    hosts: elk
+    become: true
+    tasks:
+
+      - name: Uninstall apache2
+        apt:
+          force_apt_get: yes
+          update_cache: yes
+          name: apache2
+          state: absent
+
+      - name: Install docker.io
+        apt:
+          force_apt_get: yes
+          name: docker.io
+          state: present
+
+      - name: Install pip3
+        apt:
+          force_apt_get: yes
+          name: python3-pip
+          state: present
+
+      - name: Install Docker python module
+        pip:
+          name: docker
+          state: present
+
+      - name: Set Ansible Sysctl - vm.max_map_count for memory use
+        ansible.posix.sysctl:
+          name: vm.max_map_count
+          value: '262144'
+          state: present
+
+      - name: Install docker elk container sebp/elk:761
+        docker_container:
+          name: elk
+          image: sebp/elk:761
+          state: started
+          restart_policy: always
+          ports:
+           - "5601:5601"
+           - "9200:9200"
+           - "5044:5044"
+
+      - name: Enable docker service
+        systemd:
+          name: docker
+          enabled: yes
+```
+
 
 ### Target Machines & Beats
 This ELK server is configured to monitor the following machines:
