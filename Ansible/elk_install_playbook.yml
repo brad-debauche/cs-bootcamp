@@ -1,0 +1,51 @@
+---
+  - name: Install docker and elk
+    hosts: elk
+    become: true
+    tasks:
+
+      - name: Uninstall apache2
+        apt:
+          force_apt_get: yes
+          update_cache: yes
+          name: apache2
+          state: absent
+
+      - name: Install docker.io
+        apt:
+          force_apt_get: yes
+          name: docker.io
+          state: present
+
+      - name: Install pip3
+        apt:
+          force_apt_get: yes
+          name: python3-pip
+          state: present
+
+      - name: Install Docker python module
+        pip:
+          name: docker
+          state: present
+
+      - name: Set Ansible Sysctl - vm.max_map_count for memory use
+        ansible.posix.sysctl:
+          name: vm.max_map_count
+          value: '262144'
+          state: present
+
+      - name: Install docker elk container sebp/elk:761
+        docker_container:
+          name: elk
+          image: sebp/elk:761
+          state: started
+          restart_policy: always
+          ports:
+           - "5601:5601"
+           - "9200:9200"
+           - "5044:5044"
+
+      - name: Enable docker service
+        systemd:
+          name: docker
+          enabled: yes
